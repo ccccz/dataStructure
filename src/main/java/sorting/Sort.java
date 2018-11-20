@@ -1,4 +1,4 @@
-package sorting;
+package main.java.sorting;
 
 /**
  * 排序算法类
@@ -7,14 +7,13 @@ package sorting;
 public class Sort {
     public static int[] a=new int[100];
 
-
     public static void main(String[] args){
         for (int i = 0; i < 100; i++) {
             Sort.a[i]=(int)(Math.random()*100);
         }
-        Sort.selectSort(a);
+        Sort.mergeSort(a);
         for (int i=0;i<Sort.a.length;i++){
-            System.out.println(Sort.a[i]);
+            System.out.print(Sort.a[i]+"    ");
         }
     }
 
@@ -181,6 +180,53 @@ public class Sort {
                     smallest=j;
             }
             swap(a,i,smallest);
+        }
+    }
+
+    /**
+     * 归并排序
+     */
+    public static void mergeSort(int[] a){
+        mergeSort(a,0,a.length-1);
+    }
+    private static void mergeSort(int[] a, int left, int right){
+        int middle=(left+right)/2;
+        if (left<right){
+            mergeSort(a, left, middle);
+            mergeSort(a, middle+1, right);
+        }
+        merge(a,middle,left,right);
+    }
+    private static void merge(int[] a, int middle, int left, int right){
+        int i=left, j=middle+1;
+        int k=0;
+        int[] temp=new int[right-left+1];
+        //归并
+        while( i<=middle && j<=right){
+            if (a[i]<=a[j]){
+                temp[k]=a[i];
+                i++;
+                k++;
+            }else{
+                temp[k]=a[j];
+                j++;
+                k++;
+            }
+        }
+        //将左右剩余内容全部归到临时数组中
+        while(i<=middle){
+            temp[k]=a[i];
+            i++;
+            k++;
+        }
+        while(j<=right){
+            temp[k]=a[j];
+            j++;
+            k++;
+        }
+        //转移到待排数组
+        for(k=0; k<=right-left; k++){
+            a[k+left]=temp[k];
         }
     }
 }
