@@ -1,11 +1,12 @@
 package main.java.graph;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class GList {
-    
+
     public static void main(String[] args) {
         GList a=new GList();
         a.dfs(a);
@@ -13,34 +14,41 @@ public class GList {
 
     HashMap<Integer,GNode> list=new HashMap<>();
     ArrayList<ArrayList<GNode>> rings=new ArrayList<>();
-//    int start;
 
     public GList(){
-        Scanner scanner=new Scanner(System.in);
+//        Scanner scanner=new Scanner(System.in);
         String temp;
         GNode begin=null,end=null;
-        while(true){
-            temp=scanner.nextLine();
-            if (temp.equals("q")){
-                break;
+        File file=new File("E://edges.txt");
+        try {
+            FileReader fr=new FileReader(file);
+            BufferedReader bufferedReader=new BufferedReader(fr);
+            while((temp=bufferedReader.readLine())!=null){
+                if (temp.equals("q")){
+                    break;
+                }
+                int[] edge=new int[2];
+                String[] ts=temp.split(",");
+                edge[0]=Integer.parseInt(ts[0]);
+                edge[1]=Integer.parseInt(ts[1]);
+                if (list.containsKey(edge[0])){
+                    begin=list.get(edge[0]);
+                }else{
+                    begin=new GNode(edge[0]);
+                    list.put(edge[0],begin);
+                }
+                if (list.containsKey(edge[1])){
+                    end=list.get(edge[1]);
+                }else{
+                    end=new GNode(edge[1]);
+                    list.put(edge[1],end);
+                }
+                begin.getNextNode().add(end);
             }
-            int[] edge=new int[2];
-            String[] ts=temp.split(",");
-            edge[0]=Integer.parseInt(ts[0]);
-            edge[1]=Integer.parseInt(ts[1]);
-            if (list.containsKey(edge[0])){
-                begin=list.get(edge[0]);
-            }else{
-                begin=new GNode(edge[0]);
-                list.put(edge[0],begin);
-            }
-            if (list.containsKey(edge[1])){
-                end=list.get(edge[1]);
-            }else{
-                end=new GNode(edge[1]);
-                list.put(edge[1],end);
-            }
-            begin.getNextNode().add(end);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 //        start=begin.getLabel();
     }
@@ -133,6 +141,5 @@ public class GList {
         }
         rings.add(temp);
     }
-
 
 }
